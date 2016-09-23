@@ -1,5 +1,5 @@
 $(document).ready(function(){
 	var socket = io();
-	socket.emit('echo','ryuken');
+	socket.emit('echo','ryuken ');	
 })
 
