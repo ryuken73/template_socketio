@@ -1,8 +1,25 @@
 extends layout
-
-append head
+block head
   script(src="/js/index.js")
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .container
+    section.header
+      h2 Time Monitor
+    
+      p status :
+        span#connection_status  disconnected
+      
+      p
+      .row
+         h5.one-half.column Local-Time
+         h5.one-half.column Remote-Time       
+      .row
+         #local.one-half.column --:--:--:--
+         #remote.one-half.column --:--:--:--
+        
+      
+    
+    
+    
+      
