@@ -7,7 +7,7 @@ exports.bind = function(io){
 	io.on('connection',function(socket){
 		welcomConnect(socket);
 		joinRoom(socket, io);
-		reqTime(socket, io);
+		handleTime(socket, io);
 	});
 };
 
@@ -34,6 +34,25 @@ function joinRoom(socket, io){
 	});
 }
 
+function handleTime(socket, io){
+	socket.on('reqServerTime', function(data){
+		global.logger.trace('reqServerTime : %s : %s', socket.remoteAddr, data.clientTime);
+		var serverTime = getEpochTime();
+		socket.emit('resServerTime', { serverTime:serverTime });		
+	});
+}
+
+function getEpochTime(){
+	var date = new Date();
+	return date.getTime();
+}
+
+function epochToDateObj(time){
+	var date = new Date(time);
+	return date;
+}
+
+/*
 function reqTime(socket,io){
 	setTimeout(function(){
 		global.logger.trace('request Time : %s',socket.remoteAddr);
@@ -41,3 +60,4 @@ function reqTime(socket,io){
 		//reqTime(socket,io);
 	},1000);
 }
+*/

@@ -1,17 +1,21 @@
+// client code
+
 $(document).ready(function(){
 	var socket = io();
 	handleConnect(socket);
-	
-	function getEpochTime(){
-		var date = new Date();
-		return date.getTime();
-	}
-	function epochToDateObj(time){
-		var date = new Date(time);
-		return date;
-	}
-	
+	reqTimeLoop(socket);
 })
+
+	
+function getEpochTime(){
+	var date = new Date();
+	return date.getTime();
+}
+
+function epochToDateObj(time){
+	var date = new Date(time);
+	return date;
+}
 
 
 function handleConnect(socket){
@@ -40,6 +44,26 @@ function handleRoom(socket){
 	socket.emit('joinRoom',{ roomNM : room });
 	socket.on('joinResult',function(data){
 		console.log('node joined : ' + data.ip);
-		// refresh node list : IP address
+		//TODO :  refresh same room member list : IP address
 	});   
+}
+
+function reqTimeLoop(socket){
+	setTimeout(function(){
+		console.log('request Time')
+		var clientTime = getEpochTime();
+		socket.emit('reqServerTime',{clientTime:clientTime});
+		socket.on('resServerTime',function(data){
+			console.log(clientTime);
+			console.log(data.serverTime);
+			var clientDate = epochToDateObj(clientTime);
+			var serverDate = epochToDateObj(data.serverTime);
+			//console.log(clientDate);
+			//console.log(serverDate);
+			$('#local').text(clientDate);
+			$('#remote').text(serverDate);
+			$('#offset').text(clientTime - data.serverTime);
+		});
+		reqTimeLoop(socket)		
+	},1000);
 }
