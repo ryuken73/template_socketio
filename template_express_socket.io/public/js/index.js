@@ -23,6 +23,7 @@ function handleConnect(socket){
 		console.log('connected');
 	})
 	socket.on('setID',function(data){
+		console.log(data);
 		socketID = data.socketID;
 		handleRoom(socket);
 		handleDisconnect(socket);
