@@ -5,8 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
+var routes = require('./routes/indexes');
 var users = require('./routes/users');
+var admin = require('./routes/admins');
 
 var app = express();
  
@@ -38,6 +39,7 @@ app.use(function(req,res,next){
 });
 
 app.use('/users', users);
+app.use('/admin', admin);
 app.use('*', routes);
 app.use('/', routes);
 

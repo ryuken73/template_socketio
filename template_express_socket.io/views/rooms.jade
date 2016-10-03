@@ -1,0 +1,26 @@
+extends layout
+block head
+  script(src="/js/index.js")
+
+block content
+  .container
+    section.header
+      h2 Time Monitor Admin
+    
+      p total Connected :
+        span#connected
+      
+      p
+      .row
+         h5.one-third.column Local-Time
+         h5.one-third.column Remote-Time       
+         h5.one-third.column offset (ms)    
+      .row
+         #local.one-third.column --:--:--:--
+         #remote.one-third.column --:--:--:--
+         #offset.one-third.column 0
+
+    
+    
+    
+      

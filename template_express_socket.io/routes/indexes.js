@@ -5,7 +5,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	global.logger.trace('req obj : %j',req);
-  res.render('index', { title: 'Express 1' });
+    res.render('index');
 });
 
 module.exports = router;      

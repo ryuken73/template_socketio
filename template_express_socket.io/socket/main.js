@@ -1,28 +1,32 @@
 /**
  * New node file
  */
+var adminHandler = require('./adminHandler');
 
 exports.bind = function(io){
 	var sockets = {};
 	io.on('connection',function(socket){
-		welcomConnect(socket);
-		joinRoom(socket, io);
+		welcomConnect(socket);    
+		joinRoom(socket, io);    
 		handleTime(socket, io);
+		
+		adminHandler(socket, io);
 	});
-};
+}; 
 
 function welcomConnect(socket){
-	// socket.io 에서 client address를 가져오는 3가지 방법
+	//three ways to get client ip address
 	//global.logger.trace(socket.handshake.address);
 	//global.logger.trace(socket.request.connection.remoteAddress);
 	//global.logger.trace(socket.conn.remoteAddress);	
+	
 	var remoteAddr = socket.request.connection.remoteAddress.replace('::ffff:','');
 	global.logger.info('client connected : %s', remoteAddr);
 	socket.remoteAddr = remoteAddr;
-	
-    //stateless server를 위해서...
+	 
+    //stateless server를 위해서...    
 	//socketid를 client로 내려준다. 서버에서 관리하는 socketid는 없다.
-	socket.emit('setID',{socketID:socket.id});
+	socket.emit('setID',{socketID:socket.id}); 
 	
 }
 
@@ -36,17 +40,19 @@ function joinRoom(socket, io){
 
 function handleTime(socket, io){
 	socket.on('reqServerTime', function(data){
-		global.logger.trace('reqServerTime : %s : %s', socket.remoteAddr, data.clientTime);
+		global.logger.trace('reqServerTime : %s : %s : %s', socket.remoteAddr, data.clientTime, data.socketID);
+		//var roomNM = getRoomBySocketID(data.socketID, io);
+		global.logger.trace(socket.rooms);
 		var serverTime = getEpochTime();
 		socket.emit('resServerTime', { serverTime:serverTime });		
 	});
 }
 
 function getEpochTime(){
-	var date = new Date();
+	var date = new Date(); 
 	return date.getTime();
 }
-
+ 
 function epochToDateObj(time){
 	var date = new Date(time);
 	return date;
