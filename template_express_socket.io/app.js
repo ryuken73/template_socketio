@@ -33,6 +33,14 @@ var logTracer = require('tracer').console(
 
 global.logger = logTracer;
 
+// status determined by offset (ms)
+global.status = {
+		
+		'good':{'low' : 0,    'high' : 1000, 'Level':'GOOD'},
+		'warn':{'low' : 1000, 'high' : 2000, 'Level':'WARN'},
+		'fail':{'low' : 2000, 'high' : Number.POSITIVE_INFINITY, 'Level':'FAIL'}
+}
+
 app.use(function(req,res,next){
 	req.io = app.get('io');
 	next();

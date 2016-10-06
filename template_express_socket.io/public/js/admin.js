@@ -10,7 +10,7 @@ function handleConnect(socket){
 	socket.on('connect',function(){
 		console.log('connected');
 		handleDisconnect(socket);
-        handleInit(socket)
+        handleRefesh(socket)
 	})
 }
 
@@ -20,6 +20,6 @@ function handleDisconnect(socket){
 	})
 }
 
-function handleInit(socket){
-	socket.emit('adminInit');
+function handleRefesh(socket){
+	socket.emit('reqAdminRefresh');
 }

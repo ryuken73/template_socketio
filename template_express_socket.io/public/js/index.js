@@ -66,5 +66,5 @@ function reqTimeLoop(socket){
 			$('#offset').text(clientTime - data.serverTime);
 		});
 		reqTimeLoop(socket)		
-	},1000);
+	},5000);
 }

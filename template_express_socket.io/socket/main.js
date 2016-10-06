@@ -2,14 +2,17 @@
  * New node file
  */
 var adminHandler = require('./adminHandler');
+var Q = require('q'); 
 
 exports.bind = function(io){
-	var sockets = {};
+
 	io.on('connection',function(socket){
+
 		welcomConnect(socket);    
 		joinRoom(socket, io);    
 		handleTime(socket, io);
 		
+		// for http://host.domain/admin
 		adminHandler(socket, io);
 	});
 }; 
@@ -43,9 +46,32 @@ function handleTime(socket, io){
 		global.logger.trace('reqServerTime : %s : %s : %s', socket.remoteAddr, data.clientTime, data.socketID);
 		//var roomNM = getRoomBySocketID(data.socketID, io);
 		global.logger.trace(socket.rooms);
+		var clientTime = data.clientTime;
 		var serverTime = getEpochTime();
-		socket.emit('resServerTime', { serverTime:serverTime });		
+		socket.emit('resServerTime', { serverTime:serverTime });	
+		
+		var offset = Math.abs(serverTime - clientTime);
+		getStatus(offset)
+		.then(function(status){
+			global.logger.info('status of %s(%s) is %s (%d ms)',socket.id,socket.remoteAddr,status, offset)
+			io.of('/').connected[socket.id].tMonOffset = offset;
+			io.of('/').connected[socket.id].tMonStatus = status;
+
+		})
 	});
+}
+
+function getStatus(diff){
+	var def = Q.defer()
+	
+	for ( key in global.status ) {
+		if(global.status[key].low < diff && global.status[key].high > diff){
+			console.log('reslove')
+			//def.resolve(global.status[key].level)
+			def.resolve(global.status[key].Level);
+		}	
+	}
+	return def.promise
 }
 
 function getEpochTime(){
