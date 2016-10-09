@@ -37,37 +37,44 @@ function joinRoom(socket, io){
 	socket.on('joinRoom',function(data){
 		global.logger.trace('joinRoom : %j : %s', data.roomNM, socket.id);
 		socket.join(data.roomNM);
+		// attach room name on socket.roomNM
+		socket.roomNM = data.roomNM;
 		io.to(data.roomNM).emit('joinResult',{ip:socket.remoteAddr});
 	});
 }
 
 function handleTime(socket, io){
+	
 	socket.on('reqServerTime', function(data){
 		global.logger.trace('reqServerTime : %s : %s : %s', socket.remoteAddr, data.clientTime, data.socketID);
-		//var roomNM = getRoomBySocketID(data.socketID, io);
-		global.logger.trace(socket.rooms);
+		var roomNM = socket.roomNM;
 		var clientTime = data.clientTime;
 		var serverTime = getEpochTime();
 		socket.emit('resServerTime', { serverTime:serverTime });	
 		
-		var offset = Math.abs(serverTime - clientTime);
+		var offset = Math.abs(serverTime - clientTime); // difference between server and client
 		getStatus(offset)
 		.then(function(status){
 			global.logger.info('status of %s(%s) is %s (%d ms)',socket.id,socket.remoteAddr,status, offset)
-			io.of('/').connected[socket.id].tMonOffset = offset;
-			io.of('/').connected[socket.id].tMonStatus = status;
+			// attach time difference, status and room name on io objects
+			// can be accessed by io.of(nsp).connected objects ( represent all connected socket )
+			var socketInIO = io.of('/').connected[socket.id];
+			socketInIO.tMonOffset = offset;
+			socketInIO.tMonStatus = status;
+			socketInIO.roomNM = roomNM
 
 		})
 	});
 }
 
 function getStatus(diff){
+	
+	// return time sync status based on global.status in app.js
+	
 	var def = Q.defer()
 	
 	for ( key in global.status ) {
 		if(global.status[key].low < diff && global.status[key].high > diff){
-			console.log('reslove')
-			//def.resolve(global.status[key].level)
 			def.resolve(global.status[key].Level);
 		}	
 	}
