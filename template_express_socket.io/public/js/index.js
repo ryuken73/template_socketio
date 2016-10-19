@@ -3,7 +3,7 @@
 $(document).ready(function(){
 	var socket = io();
 	handleConnect(socket);
-	reqTimeLoop(socket);
+	haneleTime(socket);
 })
 
 	
@@ -21,6 +21,7 @@ function epochToDateObj(time){
 function handleConnect(socket){
 	socket.on('connect',function(){
 		console.log('connected');
+		$('#connection_status').text('connected')
 	})
 	socket.on('setID',function(data){
 		console.log(data);
@@ -49,7 +50,32 @@ function handleRoom(socket){
 	});   
 }
 
-function reqTimeLoop(socket){
+function haneleTime(socket){
+	
+	socket.on('request client time',function(){
+		console.log('receive request client time');
+		var clientTime = getEpochTime();
+		socket.emit('response client time', {clientTime:clientTime});
+		
+	})
+	
+	socket.on('send server time', function(data){
+		console.log(data.clientTime);
+		console.log(data.serverTime);
+		var clientDate = epochToDateObj(data.clientTime);
+		var serverDate = epochToDateObj(data.serverTime);
+		//console.log(clientDate);
+		//console.log(serverDate);
+		$('#local').text(clientDate);
+		$('#remote').text(serverDate);
+		$('#offset').text(data.clientTime - data.serverTime);	
+		socket.emit('receive server time');
+		
+	})
+	
+	
+	
+	/*
 	setTimeout(function(){
 		console.log('request Time')
 		var clientTime = getEpochTime();
@@ -67,4 +93,5 @@ function reqTimeLoop(socket){
 		});
 		reqTimeLoop(socket)		
 	},5000);
+	*/
 }
