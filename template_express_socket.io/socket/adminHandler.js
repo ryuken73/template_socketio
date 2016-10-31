@@ -2,8 +2,11 @@ var _ = require('lodash');
 var Q = require('q');
 
 module.exports = function(socket, io){
+	
+	//make admin client to send request
+	socket.emit('server-to-client init')
 
-	socket.on('admin-firstPage',function(data){
+	socket.on('client-to-server reqStatus',function(data){
 		
 		// get client info objects
 		// looks like below
@@ -27,22 +30,19 @@ module.exports = function(socket, io){
 		.then(addStatus) // add client status to each client { room1 : [ {id:socketid1, remoeAddr:'x', tMonOffset:x, tMonStatus:x},{}]
 		.then(function(result){
 			global.logger.trace(result);
+			socket.emit('server-to-client resStatus',result)
 		})
 		.then(null, function(err){
 			global.logger.error(err);
-		})
-		/*
-		for ( key in clients){
-			console.log(key)
-			console.log(clients[key].roomNM)
-			console.log(clients[key].remoteAddr)
-			console.log(clients[key].tMonOffset)
-			console.log(clients[key].tMonStatus)
-		} 
-		*/
-		socket.emit('resAdminRefresh',{})
+		});
 	});
-}
+	
+	socket.on('client-to-server resDone',function(data){
+		setTimeout(function(){
+			socket.emit('server-to-client init');
+		},1000)		
+	})
+};
 
 function getRooms(clients){
 	
@@ -89,9 +89,28 @@ function addClient(obj){
 }
 
 function addStatus(obj){
+	// obj == {clients:clients, roomArry:[room1,room2..], roomObj:{room1:[socketid1,socketid2], room2:..}
+	// return  { room1 : [ {id:socketid1, remoeAddr:'x', tMonOffset:x, tMonStatus:x},{}]
 	var def = Q.defer();
-	global.logger.trace(obj)
-	def.resolve(obj)
+	global.logger.trace(obj.roomObj);
+	var count = _.size(obj.roomObj);
+	for ( key in obj.roomObj ){
+		var sockets = obj.roomObj[key];
+		obj.roomObj[key] = sockets.map(function(socketID){
+			var addr = obj.clients[socketID].remoteAddr;
+			var offset = obj.clients[socketID].tMonOffset;
+			var status = obj.clients[socketID].tMonStatus;
+			var clientTime = obj.clients[socketID].clientTime;
+			var serverTime = obj.clients[socketID].serverTime;
+			var result = {id:socketID, remoteAddr:addr, tMonOffset:offset, tMonStatus:status, clientTime:clientTime, serverTime:serverTime};		
+	
+			return result
+		})
+		count--;
+		if(count === 0){
+			def.resolve(obj.roomObj)
+		}
+	};
 	return def.promise;
 	
 }

@@ -21,5 +21,12 @@ function handleDisconnect(socket){
 }
 
 function handleRefesh(socket){
-	socket.emit('admin-firstPage');
+	socket.on('server-to-client init',function(data){
+		socket.emit('client-to-server reqStatus');		
+	});
+	
+	socket.on('server-to-client resStatus',function(data){
+		socket.emit('client-to-server resDone')
+		console.log(data);
+	})
 }   

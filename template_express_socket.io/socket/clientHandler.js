@@ -55,13 +55,15 @@ function handleTime(socket, io){
 			socketInIO.tMonOffset = offset;
 			socketInIO.tMonStatus = result.status;
 			socketInIO.roomNM = roomNM;
+			socketInIO.clientTime = clientTime;
+			socketInIO.serverTime = serverTime;
 		})
 	});
 	
 	socket.on('receive server time',function(data){
 		setTimeout(function(){
 			socket.emit('request client time');
-		},1000)
+		},5000)
 	})	
 }
 
