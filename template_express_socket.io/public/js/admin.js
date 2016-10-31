@@ -21,5 +21,5 @@ function handleDisconnect(socket){
 }
 
 function handleRefesh(socket){
-	socket.emit('reqAdminRefresh');
-}
+	socket.emit('admin-firstPage');
+}   

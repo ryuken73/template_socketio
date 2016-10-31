@@ -14,8 +14,7 @@ exports.bind = function(io){
 		adminHandler(socket, io);
 
 		// for others
-		clientHandler(socket, io);
-		
+		clientHandler(socket, io);	
 
 	});
 }; 

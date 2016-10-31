@@ -55,8 +55,7 @@ function haneleTime(socket){
 	socket.on('request client time',function(){
 		console.log('receive request client time');
 		var clientTime = getEpochTime();
-		socket.emit('response client time', {clientTime:clientTime});
-		
+		socket.emit('response client time', {clientTime:clientTime, socketID:socketID});		
 	})
 	
 	socket.on('send server time', function(data){
@@ -72,26 +71,5 @@ function haneleTime(socket){
 		socket.emit('receive server time');
 		
 	})
-	
-	
-	
-	/*
-	setTimeout(function(){
-		console.log('request Time')
-		var clientTime = getEpochTime();
-		socket.emit('reqServerTime',{clientTime:clientTime});
-		socket.on('resServerTime',function(data){
-			console.log(clientTime);
-			console.log(data.serverTime);
-			var clientDate = epochToDateObj(clientTime);
-			var serverDate = epochToDateObj(data.serverTime);
-			//console.log(clientDate);
-			//console.log(serverDate);
-			$('#local').text(clientDate);
-			$('#remote').text(serverDate);
-			$('#offset').text(clientTime - data.serverTime);
-		});
-		reqTimeLoop(socket)		
-	},5000);
-	*/
+
 }

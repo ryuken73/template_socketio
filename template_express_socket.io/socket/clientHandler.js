@@ -8,6 +8,7 @@ module.exports = function(socket, io){
 }
 
 function welcome(socket){
+
 	//three ways to get client ip address
 	//global.logger.trace(socket.handshake.address);
 	//global.logger.trace(socket.request.connection.remoteAddress);
@@ -45,14 +46,14 @@ function handleTime(socket, io){
 		socket.emit('send server time',{ serverTime:serverTime, clientTime:clientTime });
 		var offset = Math.abs(serverTime - clientTime); // difference between server and client
 		
-		getStatus(offset)
-		.then(function(status){
-			global.logger.info('status of %s(%s) is %s (%d ms)',socket.id,socket.remoteAddr,status, offset)
+		getStatus(offset, clientTime)
+		.then(function(result){
+			global.logger.info('status of %s(%s) is %s (%d ms)',socket.id,socket.remoteAddr, result.status, result.clientTime, offset)
 			// attach time difference, status and room name on io objects
 			// can be accessed by io.of(nsp).connected objects ( represent all connected socket )
 			var socketInIO = io.of('/').connected[socket.id];
 			socketInIO.tMonOffset = offset;
-			socketInIO.tMonStatus = status;
+			socketInIO.tMonStatus = result.status;
 			socketInIO.roomNM = roomNM;
 		})
 	});
@@ -64,15 +65,17 @@ function handleTime(socket, io){
 	})	
 }
 
-function getStatus(diff){
+function getStatus(diff, clientTime){
 	
 	// return time sync status based on global.status in app.js
-	
 	var def = Q.defer()
 	
 	for ( key in global.status ) {
 		if(global.status[key].low < diff && global.status[key].high > diff){
-			def.resolve(global.status[key].Level);
+			var result = {};
+			result.status = global.status[key].Level;
+			result.clientTime = clientTime;
+			def.resolve(result);
 		}	
 	}
 	return def.promise

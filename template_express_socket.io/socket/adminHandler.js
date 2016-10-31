@@ -3,7 +3,7 @@ var Q = require('q');
 
 module.exports = function(socket, io){
 
-	socket.on('reqAdminRefresh',function(data){
+	socket.on('admin-firstPage',function(data){
 		
 		// get client info objects
 		// looks like below
@@ -107,8 +107,7 @@ function getStatus(clients){
 			if(roomNM !== key){
 				myRoom = roomNM;	
 			}
-		}
-		
+		}		
 	}
 	
 	return def.promise;
