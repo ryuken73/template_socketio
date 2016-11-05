@@ -28,6 +28,7 @@ module.exports = function(socket, io){
 		getRooms(clients) // get room array [ room1, room2 ]
 		.then(addClient) // add client to each room { room1 : [sockid1,sockid2], room2 : [sockid] }
 		.then(addStatus) // add client status to each client { room1 : [ {id:socketid1, remoeAddr:'x', tMonOffset:x, tMonStatus:x},{}]
+		.then(mkSummary) // make summary [{roomNM:room name, connected: number of client, status:{good:0,warn:1,fail:0},{roomNM:..]
 		.then(function(result){
 			global.logger.trace(result);
 			socket.emit('server-to-client resStatus',result)
@@ -89,7 +90,7 @@ function addClient(obj){
 }
 
 function addStatus(obj){
-	// obj == {clients:clients, roomArry:[room1,room2..], roomObj:{room1:[socketid1,socketid2], room2:..}
+	// obj == { clients:clients, roomArry:[room1,room2..], roomObj:{room1:[socketid1,socketid2], room2:..}
 	// return  { room1 : [ {id:socketid1, remoeAddr:'x', tMonOffset:x, tMonStatus:x},{}]
 	var def = Q.defer();
 	global.logger.trace(obj.roomObj);
@@ -111,9 +112,32 @@ function addStatus(obj){
 			def.resolve(obj.roomObj)
 		}
 	};
-	return def.promise;
-	
+	return def.promise;	
 }
+
+function mkSummary(obj){
+	var def = Q.defer();
+	// obj == {room name : [ {id:socketid1, remoeAddr:'x', tMonOffset:x, tMonStatus:x},{}..], room name : [...]}
+	// return [{roomNM:room name, connected: number of client, status:{good:0,warn:1,fail:0},{roomNM:..]
+	var summary = _.map(obj,function(value, key, collection){
+							var result = {};
+							var roomNM = key;
+							var size = _.size(value);
+							var statusList = _.map(value,'tMonStatus');
+							var statusObj = _.countBy(statusList, function(status){return status;});
+							
+							result['roomNM'] = roomNM; 
+							result['connected'] = size;
+							result['status'] = statusObj; 
+							return result
+						})
+						
+	global.logger.trace('summary : %j', summary);	
+	def.resolve(summary);
+	
+	return def.promise;
+}
+
 
 function getStatus(clients){
 	

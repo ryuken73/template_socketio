@@ -26,7 +26,13 @@ function handleRefesh(socket){
 	});
 	
 	socket.on('server-to-client resStatus',function(data){
-		socket.emit('client-to-server resDone')
-		console.log(data);
+		console.log(data.root[0].tMonStatus);
+		socket.emit('client-to-server resDone');
+		$('#addr').text(data.root[0].remoteAddr);
+		$('#clientTime').text(data.root[0].clientTime);
+		$('#serverTime').text(data.root[0].serverTime);
+		$('#offset').text(data.root[0].tMonOffset);
+		$('#state').text(data.root[0].tMonStatus);
+
 	})
 }   
