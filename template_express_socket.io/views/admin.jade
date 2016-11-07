@@ -1,6 +1,7 @@
 extends layout
 block head
   script(src="/js/admin.js")
+  script(src='https://cdn.jsdelivr.net/lodash/4.16.6/lodash.min.js')
 
 block content
   .container
@@ -15,7 +16,16 @@ block content
          h5.one-third.column Group-Name
          h5.one-third.column Connected       
          h5.one-third.column Status    
-      #summary         
+      #summary  
+       #root.row.group
+         #groupNM.one-third.column root
+         #connected.one-third.column 1
+         #status.one-third.column GOOD:1
+       #msng.row.group
+         .one-third.column msng
+         .one-third.column 1
+         .one-third.column GOOD:1         
+             
       .row
          #groupNM.one-third.column 
          #connected.one-third.column 
