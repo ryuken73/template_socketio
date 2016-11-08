@@ -77,13 +77,13 @@ function updateData(data){
 		$('#summary #'+group.roomNM+' #connected').text(group.connected);
 		$('#summary #'+group.roomNM+' #status').html(statusHtml);
 		
-	})
+	}) 
 }
 
 function mkSatusHtml(status){
 	var numGood = status.GOOD ? status.GOOD:0;
-	var numWarn = status.WARN ? status.GOOD:0;
-	var numFail = status.FAIL ? status.GOOD:0;
+	var numWarn = status.WARN ? status.WARN:0;
+	var numFail = status.FAIL ? status.FAIL:0;
 	
 	var good = '<span class="good">Good:' + numGood + ' </span>';
 	var warn = '<span class="warn">Warn:' + numWarn + ' </span>';
