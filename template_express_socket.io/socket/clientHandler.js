@@ -77,6 +77,7 @@ function getStatus(diff, clientTime){
 			var result = {};
 			result.status = global.status[key].Level;
 			result.clientTime = clientTime;
+			global.logger.trace(result);
 			def.resolve(result);
 		}	
 	}
