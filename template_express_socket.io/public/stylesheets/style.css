@@ -6,3 +6,15 @@ body {
 a {
   color: #00B7FF;
 }
+
+.good {	
+	color : blueviolet;
+}
+.warn {
+	color : darkgray;	
+	
+}
+.fail {
+	
+	color : red;
+}

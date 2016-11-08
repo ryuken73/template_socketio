@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var Q = require('q');
+var dateUtil = require('../lib/dateToString');
 
 module.exports = function(socket, io){
 	
@@ -31,7 +32,7 @@ module.exports = function(socket, io){
 		.then(mkSummary) // make summary [{roomNM:room name, connected: number of client, status:{good:0,warn:1,fail:0},{roomNM:..]
 		.then(function(result){
 			global.logger.trace(result);
-			socket.emit('server-to-client resStatus',result)
+			socket.emit('server-to-client resStatus',result);
 		})
 		.then(null, function(err){
 			global.logger.error(err);
@@ -41,8 +42,8 @@ module.exports = function(socket, io){
 	socket.on('client-to-server resDone',function(data){
 		setTimeout(function(){
 			socket.emit('server-to-client init');
-		},1000)		
-	})
+		},1000);		
+	});
 };
 
 function getRooms(clients){
@@ -66,7 +67,7 @@ function getRooms(clients){
 	return def.promise;
 }
 
-function addClient(obj){
+function addClient(obj){ 
 	
 	// return room object having room name as a key and socket array as value
 	// {room1:[socketid1, socketid2], room2:[socketid3]...}	
