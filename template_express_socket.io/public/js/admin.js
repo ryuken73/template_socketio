@@ -57,8 +57,8 @@ function addData(data){
 		console.log('append : ' + group.roomNM);
 		var statusHtml = mkSatusHtml(group.status);
 		var rowData = '<div id=' + group.roomNM + ' class = "row group">'
-		//rowData     += '  <div id=groupNM class="three columns"><a href="/111">' + group.roomNM + '</a></div>'	
-		rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
+		rowData     += '  <div id=groupNM class="three columns"><a href="/111">' + group.roomNM + '</a></div>'	
+		//rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
 		rowData     += '  <div id=connected class = "three columns">' + group.connected + '</div>'	
 		rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'	
 		rowData     += '</div>  ';
