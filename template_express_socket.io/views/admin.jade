@@ -7,6 +7,9 @@ block content
   .container
     section.header
       h2 Time Monitor Admin
+      
+      h5 status :
+        span#connection_status.disconnected  disconnected      
     
       div Total Connected :
        span#connected
@@ -19,26 +22,16 @@ block content
          h5.three.columns Connected       
          h5.three.columns Status    
       #summary  
-        
-             
-      .row
-         #groupNM.one-third.column 
-         #connected.one-third.column 
-         #status.one-third.column 0
+
       p     
       .row
+         h5.three.columns Group-Name
          h5.two.columns IP Address
          h5.two.columns Client Time
          h5.two.columns Server Time
-         h5.three.columns Offset
-         h5.three.columns Status
-      .row
-         #addr.two.columns
-         #clientTime.two.columns
-         #serverTime.two.columns
-         #offset.three.columns
-         #state.three.columns   
- 
+         h5.two.columns Offset
+         h5.one.columns Status
+      #detail
     
     
     
