@@ -48,7 +48,7 @@ function handleTime(socket, io){
 		
 		getStatus(offset, clientTime)
 		.then(function(result){
-			global.logger.info('status of %s(%s) is %s (%d ms)',socket.id,socket.remoteAddr, result.status, result.clientTime, offset)
+			global.logger.info('status of %s(%s) is %s (%d ms)',socket.remoteAddr,socket.id, result.status, result.clientTime, offset)
 			// attach time difference, status and room name on io objects
 			// can be accessed by io.of(nsp).connected objects ( represent all connected socket )
 			var socketInIO = io.of('/').connected[socket.id];
@@ -73,7 +73,7 @@ function getStatus(diff, clientTime){
 	var def = Q.defer()
 	
 	for ( key in global.status ) {
-		if(global.status[key].low < diff && global.status[key].high > diff){
+		if(global.status[key].low <= diff && global.status[key].high > diff){
 			var result = {};
 			result.status = global.status[key].Level;
 			result.clientTime = clientTime;

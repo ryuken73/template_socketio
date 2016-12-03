@@ -18,3 +18,11 @@ a {
 	
 	color : red;
 }
+
+.disconnected {
+	color : red
+}
+
+.connected {
+	color : blue
+}

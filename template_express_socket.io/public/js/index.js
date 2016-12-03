@@ -21,7 +21,8 @@ function epochToDateObj(time){
 function handleConnect(socket){
 	socket.on('connect',function(){
 		console.log('connected');
-		$('#connection_status').text('connected')
+		$('#connection_status').text('connected');
+		$('#connection_status').attr('class','connected');
 	})
 	socket.on('setID',function(data){
 		console.log(data);
@@ -37,6 +38,7 @@ function handleConnect(socket){
 function handleDisconnect(socket){
 	socket.on('disconnect',function(){
 		console.log('disconnected');
+		$('#connection_status').attr('class','disconnected');
 	})
 }
 
