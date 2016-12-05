@@ -26,3 +26,11 @@ a {
 .connected {
 	color : blue
 }
+
+.enabled {
+	color : black	
+}
+
+.disabled {
+	color : aliceblue 	
+}

@@ -22,6 +22,7 @@ function handleConnect(socket){
 	socket.on('connect',function(){
 		console.log('connected');
 		$('#connection_status').text('connected');
+		$('.row').attr('class','row enabled');
 		$('#connection_status').attr('class','connected');
 	})
 	socket.on('setID',function(data){
@@ -38,6 +39,8 @@ function handleConnect(socket){
 function handleDisconnect(socket){
 	socket.on('disconnect',function(){
 		console.log('disconnected');
+		$('#connection_status').text('disconnected');
+		$('.row').attr('class','row disabled');
 		$('#connection_status').attr('class','disconnected');
 	})
 }
