@@ -11,10 +11,12 @@ function handleConnect(socket){
 		console.log('connected');
 		$('#connection_status').text('connected');
 		$('#connection_status').attr('class','connected');
-		handleDisconnect(socket);
-        handleSummaryRefesh(socket);
-        handleDetailRefresh(socket);
+
+
 	})
+	handleDisconnect(socket);	
+    handleSummaryRefesh(socket);
+    handleDetailRefresh(socket);
 }
 
 function handleDisconnect(socket){
@@ -26,24 +28,26 @@ function handleDisconnect(socket){
 
 function handleDetailRefresh(socket){
 	socket.on('adminDetail-server-to-client init',function(data){
+		console.log('send req to server');
 		socket.emit('client-to-server reqAllStatus');
 	});
 	
 	socket.on('server-to-client resAllStatus', function(data){	
+		console.log('got res from server');
 		updateDetail(data);
 		addDetail(data);
 		socket.emit('client-to-server resAllStatusDone');	
 	});
 	
 }
-
+ 
 function addDetail(data){
 	
 	var newData = _.filter(data, function(socket){
 		var socketID = socket.socketID;
 		return !(_.some($('.socket'),['id', socketID]));
 	});
-	console.log(newData);
+	//console.log(newData);
 	newData.forEach(function(socket){
 		console.log('append : ' + socket.socketID);
 		var sockData = '<div id=' + socket.socketID + ' class = "row socket">';
@@ -55,7 +59,7 @@ function addDetail(data){
 		sockData    +=   '<div id=status class="one columns">' + socket.tMonStatus + '</div>';			
 		
 		sockData     += '</div>  ';
-		$('#detail').append(sockData);
+		$('#detail').append(sockData); 
 	
 	});
 	
@@ -68,7 +72,7 @@ function updateDetail(data){
 		return _.some($('.socket'),['id', socketID]);
 	})
 	updateData.forEach(function(socket){
-		console.log('update : ' + socket.socketID);
+		//console.log('update : ' + socket.socketID);
 		var escapedID = socket.socketID.replace( /(:|\.|\/|\#|\-|\[|_|\]|,|=)/g, "\\$1" );
 		console.log('escaped : ' + escapedID);
 		$('#detail #'+escapedID+' #roomNM').text(socket.roomNM);
@@ -86,10 +90,12 @@ function updateDetail(data){
 
 function handleSummaryRefesh(socket){
 	socket.on('adminSummary-server-to-client init',function(data){
+		console.log('send req summary');
 		socket.emit('client-to-server reqSummary');		
 	});
-	
+
 	socket.on('server-to-client resSummary',function(data){		
+		console.log('get res summary');
 		removeData(data);
 		updateData(data);
 		addData(data);
@@ -100,7 +106,7 @@ function handleSummaryRefesh(socket){
 }   
 
 function removeData(data){
-
+ 
 	// remove some previous rows which is not in newly arrived data 
 	var noData = _.reject($('.group') ,function(element){
 		var roomNM = element.id;
@@ -165,8 +171,8 @@ function chgHeader(data){
 	var connected = _.reduce(data, function(result,value,key,collection){
 		return result + value.connected	
 	},0);
-	$('#connected').text(connected);
-	// change last update time
+	$('#connected').text(connected);     
+	// change last update time 
 	var date = new Date();
 	$('#lastUpdated').text(date);
 	

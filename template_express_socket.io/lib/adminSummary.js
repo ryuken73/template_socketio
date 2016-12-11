@@ -97,11 +97,12 @@ function addStatus(obj){
 	var def = Q.defer();
 	global.logger.trace(obj.roomObj);
 	var count = _.size(obj.roomObj);
+	if(count === 0) { def.resolve({}) };
 	for ( key in obj.roomObj ){
 		var sockets = obj.roomObj[key];
 		obj.roomObj[key] = sockets.map(function(socketID){
 			var addr = obj.clients[socketID].remoteAddr;
-			var offset = obj.clients[socketID].tMonOffset;
+			var offset = obj.clients[socketID].tMonOffset; 
 			var status = obj.clients[socketID].tMonStatus;
 			var clientTime = obj.clients[socketID].clientTime;
 			var serverTime = obj.clients[socketID].serverTime;
