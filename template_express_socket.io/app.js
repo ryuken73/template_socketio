@@ -38,7 +38,7 @@ global.status = {
 		
 		'good':{'low' : 0,    'high' : 500, 'Level':'GOOD'},
 		'warn':{'low' : 500, 'high' : 2000, 'Level':'WARN'},
-		'fail':{'low' : 2000, 'high' : Number.POSITIVE_INFINITY, 'Level':'FAIL'}
+		'fail':{'low' : 2000, 'high' : Number.POSITIVE_INFINITY, 'Level':'FAIL'} 
 };
 
 app.use(function(req,res,next){
