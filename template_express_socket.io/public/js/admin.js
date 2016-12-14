@@ -11,8 +11,6 @@ function handleConnect(socket){
 		console.log('connected');
 		$('#connection_status').text('connected');
 		$('#connection_status').attr('class','connected');
-
-
 	})
 	handleDisconnect(socket);	
     handleSummaryRefesh(socket);
@@ -22,6 +20,7 @@ function handleConnect(socket){
 function handleDisconnect(socket){
 	socket.on('disconnect',function(){
 		console.log('disconnected');
+		$('#connection_status').text('disconnected');
 		$('#connection_status').attr('class','disconnected');
 	})
 }
@@ -34,13 +33,49 @@ function handleDetailRefresh(socket){
 	
 	socket.on('server-to-client resAllStatus', function(data){	
 		console.log('got res from server');
+		removeDetail(data);
 		updateDetail(data);
 		addDetail(data);
 		socket.emit('client-to-server resAllStatusDone');	
 	});
 	
 }
+
+function removeDetail(data){
+
+	var noData = _.reject($('.socket') ,function(element){
+		var socketID = element.id;
+		return _.some(data,['socketID',socketID]);
+	})
+	console.log(noData);
+	
+	_.forEach(noData, function(element){
+		$('#' + element.id).remove();
+	})		
+	
+}
+
  
+function updateDetail(data){
+	// update some rows which is in newly arrived data
+	var updateData = _.filter(data, function(socket){
+		var socketID = socket.socketID;
+		return _.some($('.socket'),['id', socketID]);
+	})
+	updateData.forEach(function(socket){
+		//console.log('update : ' + socket.socketID);
+		var escapedID = socket.socketID.replace( /(:|\.|\/|\#|\-|\[|_|\]|,|=)/g, "\\$1" );
+		console.log('escaped : ' + escapedID);
+		$('#detail #'+escapedID+' #roomNM').text(socket.roomNM);
+		$('#detail #'+escapedID+' #addr').text(socket.remoteAddr);
+		$('#detail #'+escapedID+' #ctime').text(socket.clientTime);
+		$('#detail #'+escapedID+' #stime').text(socket.serverTime);
+		$('#detail #'+escapedID+' #offset').text(socket.tMonOffset);
+		$('#detail #'+escapedID+' #status').text(socket.tMonStatus);		
+	}) 		
+}
+
+
 function addDetail(data){
 	
 	var newData = _.filter(data, function(socket){
@@ -65,27 +100,7 @@ function addDetail(data){
 	
 }
 
-function updateDetail(data){
-	// update some rows which is in newly arrived data
-	var updateData = _.filter(data, function(socket){
-		var socketID = socket.socketID;
-		return _.some($('.socket'),['id', socketID]);
-	})
-	updateData.forEach(function(socket){
-		//console.log('update : ' + socket.socketID);
-		var escapedID = socket.socketID.replace( /(:|\.|\/|\#|\-|\[|_|\]|,|=)/g, "\\$1" );
-		console.log('escaped : ' + escapedID);
-		$('#detail #'+escapedID+' #roomNM').text(socket.roomNM);
-		$('#detail #'+escapedID+' #addr').text(socket.remoteAddr);
-		$('#detail #'+escapedID+' #ctime').text(socket.clientTime);
-		$('#detail #'+escapedID+' #stime').text(socket.serverTime);
-		$('#detail #'+escapedID+' #offset').text(socket.tMonOffset);
-		$('#detail #'+escapedID+' #status').text(socket.tMonStatus);
 
-		
-	}) 	
-	
-}
 
 
 function handleSummaryRefesh(socket){
