@@ -3,6 +3,7 @@
 $(document).ready(function(){
 	var socket = io();
 	handleConnect(socket);
+
 })
 
 	
@@ -27,12 +28,12 @@ function handleDisconnect(socket){
 
 function handleDetailRefresh(socket){
 	socket.on('adminDetail-server-to-client init',function(data){
-		console.log('send req to server');
+		//console.log('send req to server');
 		socket.emit('client-to-server reqAllStatus');
 	});
 	
 	socket.on('server-to-client resAllStatus', function(data){	
-		console.log('got res from server');
+		//console.log('got res from server');
 		removeDetail(data);
 		updateDetail(data);
 		addDetail(data);
@@ -47,7 +48,7 @@ function removeDetail(data){
 		var socketID = element.id;
 		return _.some(data,['socketID',socketID]);
 	})
-	console.log(noData);
+	//console.log(noData);
 	
 	_.forEach(noData, function(element){
 		$('#' + element.id).remove();
@@ -65,7 +66,7 @@ function updateDetail(data){
 	updateData.forEach(function(socket){
 		//console.log('update : ' + socket.socketID);
 		var escapedID = socket.socketID.replace( /(:|\.|\/|\#|\-|\[|_|\]|,|=)/g, "\\$1" );
-		console.log('escaped : ' + escapedID);
+		//console.log('escaped : ' + escapedID);
 		$('#detail #'+escapedID+' #roomNM').text(socket.roomNM);
 		$('#detail #'+escapedID+' #addr').text(socket.remoteAddr);
 		$('#detail #'+escapedID+' #ctime').text(socket.clientTime);
@@ -84,33 +85,29 @@ function addDetail(data){
 	});
 	//console.log(newData);
 	newData.forEach(function(socket){
-		console.log('append : ' + socket.socketID);
-		var sockData = '<div id=' + socket.socketID + ' class = "row socket">';
+		//console.log('append : ' + socket.socketID);
+		var sockData = '<div id=' + socket.socketID + ' class = "row socket" groupNM =' + socket.roomNM + '>';
 		sockData    +=   '<div id=roomNM class="three columns">' + socket.roomNM + '</div>';
 		sockData    +=   '<div id=addr class="two columns">' + socket.remoteAddr + '</div>';
 		sockData    +=   '<div id=ctime class="two columns">' + socket.clientTime + '</div>';		
 		sockData    +=   '<div id=stime class="two columns">' + socket.serverTime + '</div>';		
 		sockData    +=   '<div id=offset class="two columns">' + socket.tMonOffset + '</div>';	
-		sockData    +=   '<div id=status class="one columns">' + socket.tMonStatus + '</div>';			
-		
+		sockData    +=   '<div id=status class="one columns">' + socket.tMonStatus + '</div>';				
 		sockData     += '</div>  ';
-		$('#detail').append(sockData); 
-	
+		$('#detail').append(sockData);
+		$('#'+socket.socketID+'.socket').hide();
 	});
 	
 }
 
-
-
-
 function handleSummaryRefesh(socket){
 	socket.on('adminSummary-server-to-client init',function(data){
-		console.log('send req summary');
+		//console.log('send req summary');
 		socket.emit('client-to-server reqSummary');		
 	});
 
 	socket.on('server-to-client resSummary',function(data){		
-		console.log('get res summary');
+		//console.log('get res summary');
 		removeData(data);
 		updateData(data);
 		addData(data);
@@ -140,18 +137,27 @@ function addData(data){
 		var roomNM = group.roomNM;
 		return !(_.some($('.group'),['id', roomNM]));
 		
-	})
+	});
+	
 	newData.forEach(function(group){
-		console.log('append : ' + group.roomNM);
+		//console.log('append : ' + group.roomNM);
 		var statusHtml = mkSatusHtml(group.status);
 		var rowData = '<div id=' + group.roomNM + ' class = "row group">'
-		rowData     += '  <div id=groupNM class="three columns"><a href="/111">' + group.roomNM + '</a></div>'	
+		rowData     += '  <div id=groupNM class="three columns"><input type="checkbox" roomNM=' + group.roomNM + '> ' + group.roomNM + '</input></div>'	
 		//rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
 		rowData     += '  <div id=connected class = "three columns">' + group.connected + '</div>'	
 		rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'	
 		rowData     += '</div>  ';
 		$('#summary').append(rowData);
-	})
+		$('input[roomNM=' + group.roomNM + ']').change(function(){
+			//console.log($(this).is(":checked"));
+			if($(this).is(":checked")){
+				$('.socket[groupNM=' + group.roomNM + ']').show();
+			}else{
+				$('.socket[groupNM=' + group.roomNM + ']').hide();				
+			}
+		})
+	});	
 }
 
 function mkSatusHtml(status){
@@ -172,7 +178,7 @@ function updateData(data){
 		return _.some($('.group'),['id', roomNM]);
 	})
 	updateData.forEach(function(group){
-		console.log('update : ' + group.roomNM);
+		//console.log('update : ' + group.roomNM);
 		var statusHtml = mkSatusHtml(group.status);
 		$('#summary #'+group.roomNM+' #connected').text(group.connected);
 		$('#summary #'+group.roomNM+' #status').html(statusHtml);
