@@ -128,10 +128,13 @@ function mkSummary(obj){
 							var size = _.size(value);
 							var statusList = _.map(value,'tMonStatus');
 							var statusObj = _.countBy(statusList, function(status){return status;});
+							var offsetList = _.map(value,'tMonOffset');
+							var maxOffset = _.max(offsetList);
 							
 							result['roomNM'] = roomNM; 
 							result['connected'] = size;
 							result['status'] = statusObj; 
+							result['maxOffset'] = maxOffset;
 							return result
 						})
 						

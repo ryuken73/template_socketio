@@ -146,7 +146,8 @@ function addData(data){
 		rowData     += '  <div id=groupNM class="three columns"><input type="checkbox" roomNM=' + group.roomNM + '> ' + group.roomNM + '</input></div>'	
 		//rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
 		rowData     += '  <div id=connected class = "three columns">' + group.connected + '</div>'	
-		rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'	
+		rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'
+		rowData     += '  <div id=maxoffset class = "three columns">' + group.maxOffset + '</div>'
 		rowData     += '</div>  ';
 		$('#summary').append(rowData);
 		$('input[roomNM=' + group.roomNM + ']').change(function(){
@@ -182,7 +183,7 @@ function updateData(data){
 		var statusHtml = mkSatusHtml(group.status);
 		$('#summary #'+group.roomNM+' #connected').text(group.connected);
 		$('#summary #'+group.roomNM+' #status').html(statusHtml);
-		
+		$('#summary #'+group.roomNM+' #maxoffset').text(group.maxOffset);		
 	}) 
 }
 
