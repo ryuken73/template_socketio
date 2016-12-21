@@ -66,7 +66,8 @@ function addStatus(obj){
 		var status = obj.clients[socketID].tMonStatus;
 		var clientTime = obj.clients[socketID].clientTime;
 		var serverTime = obj.clients[socketID].serverTime;
-		var result = {socketID:socketID, roomNM:roomNM,remoteAddr:addr, tMonOffset:offset, tMonStatus:status, clientTime:clientTime, serverTime:serverTime };		
+		var alias =  obj.clients[socketID].alias;
+		var result = {socketID:socketID, roomNM:roomNM,remoteAddr:addr, tMonOffset:offset, tMonStatus:status, clientTime:clientTime, serverTime:serverTime, alias:alias };		
 	
 		return result
 	});

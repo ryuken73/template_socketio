@@ -11,6 +11,7 @@ function handleConnect(socket){
 	socket.on('connect',function(){
 		console.log('connected');
 		$('#connection_status').text('connected');
+		//$('.row').attr('class','row enabled');
 		$('#connection_status').attr('class','connected');
 	})
 	handleDisconnect(socket);	
@@ -22,6 +23,7 @@ function handleDisconnect(socket){
 	socket.on('disconnect',function(){
 		console.log('disconnected');
 		$('#connection_status').text('disconnected');
+		//$('.row').attr('class','row disabled');
 		$('#connection_status').attr('class','disconnected');
 	})
 }
@@ -67,8 +69,10 @@ function updateDetail(data){
 		//console.log('update : ' + socket.socketID);
 		var escapedID = socket.socketID.replace( /(:|\.|\/|\#|\-|\[|_|\]|,|=)/g, "\\$1" );
 		//console.log('escaped : ' + escapedID);
+		var ipPlusAlias = socket.remoteAddr + ' : ' + socket.alias;
 		$('#detail #'+escapedID+' #roomNM').text(socket.roomNM);
-		$('#detail #'+escapedID+' #addr').text(socket.remoteAddr);
+		//$('#detail #'+escapedID+' #addr').text(socket.remoteAddr);
+		$('#detail #'+escapedID+' #addr').text(ipPlusAlias);
 		$('#detail #'+escapedID+' #ctime').text(socket.clientTime);
 		$('#detail #'+escapedID+' #stime').text(socket.serverTime);
 		$('#detail #'+escapedID+' #offset').text(socket.tMonOffset);
@@ -86,9 +90,11 @@ function addDetail(data){
 	//console.log(newData);
 	newData.forEach(function(socket){
 		//console.log('append : ' + socket.socketID);
+		var ipPlusAlias = socket.remoteAddr + ' : ' + socket.alias;
 		var sockData = '<div id=' + socket.socketID + ' class = "row socket" groupNM =' + socket.roomNM + '>';
 		sockData    +=   '<div id=roomNM class="three columns">' + socket.roomNM + '</div>';
-		sockData    +=   '<div id=addr class="two columns">' + socket.remoteAddr + '</div>';
+		//sockData    +=   '<div id=addr class="two columns">' + socket.remoteAddr + '</div>';
+		sockData    +=   '<div id=addr class="two columns">' + ipPlusAlias + '</div>';
 		sockData    +=   '<div id=ctime class="two columns">' + socket.clientTime + '</div>';		
 		sockData    +=   '<div id=stime class="two columns">' + socket.serverTime + '</div>';		
 		sockData    +=   '<div id=offset class="two columns">' + socket.tMonOffset + '</div>';	

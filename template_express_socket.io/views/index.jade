@@ -9,7 +9,7 @@ block content
     
       p status :
         span#connection_status.disconnected  disconnected
-      
+           
       p
       .row
          h5.one-half.column Local-Time         
@@ -25,6 +25,13 @@ block content
          h5.one-third.column offset (ms)    
       .row
          #offset.one-half.column 0
+         
+      p
+      .row                 
+         h5.one-fourth.column Alias(HostName)    
+      .row
+         .three.columns
+            input#alias.u-full-width(type="text")       
 
     
     

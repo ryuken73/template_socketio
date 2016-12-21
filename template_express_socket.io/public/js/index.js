@@ -60,7 +60,8 @@ function haneleTime(socket){
 	socket.on('request client time',function(){
 		console.log('receive request client time');
 		var clientTime = getEpochTime();
-		socket.emit('response client time', {clientTime:clientTime, socketID:socketID});		
+		var alias = $('#alias').val() ? $('#alias').val() : "none";
+		socket.emit('response client time', {clientTime:clientTime, socketID:socketID, alias:alias});		
 	})
 	
 	socket.on('send server time', function(data){

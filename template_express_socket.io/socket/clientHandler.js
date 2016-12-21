@@ -39,7 +39,7 @@ function handleTime(socket, io){
 	socket.emit('request client time');
 	
 	socket.on('response client time',function(data){
-		global.logger.trace('response client time : %s : %s : %s', socket.remoteAddr, data.clientTime, data.socketID);
+		global.logger.trace('response client time : %s : %s : %s : %s', socket.remoteAddr, data.clientTime, data.socketID, data.alias );
 		var roomNM = socket.roomNM;
 		var clientTime = data.clientTime;
 		var serverTime = getEpochTime();
@@ -57,6 +57,7 @@ function handleTime(socket, io){
 			socketInIO.roomNM = roomNM;
 			socketInIO.clientTime = clientTime;
 			socketInIO.serverTime = serverTime;
+			socketInIO.alias = data.alias;
 		})
 	});
 	
