@@ -149,7 +149,7 @@ function addData(data){
 		//console.log('append : ' + group.roomNM);
 		var statusHtml = mkSatusHtml(group.status);
 		var rowData = '<div id=' + group.roomNM + ' class = "row group">'
-		rowData     += '  <div id=groupNM class="three columns"><input type="checkbox" roomNM=' + group.roomNM + '> ' + group.roomNM + '</input></div>'	
+		rowData     += '  <div id=groupNM class="two columns"><input type="checkbox" roomNM=' + group.roomNM + '> ' + group.roomNM + '</input></div>'	
 		//rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
 		rowData     += '  <div id=connected class = "three columns">' + group.connected + '</div>'	
 		rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'
