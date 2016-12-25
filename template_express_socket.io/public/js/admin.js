@@ -156,6 +156,9 @@ function addData(data){
 		rowData     += '  <div id=maxoffset class = "three columns">' + group.maxOffset + '</div>'
 		rowData     += '</div>  ';
 		$('#summary').append(rowData);
+		if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
+			$('.socket[groupNM=' + group.roomNM + ']').show();
+		}
 		$('input[roomNM=' + group.roomNM + ']').change(function(){
 			//console.log($(this).is(":checked"));
 			if($(this).is(":checked")){
@@ -190,6 +193,10 @@ function updateData(data){
 		$('#summary #'+group.roomNM+' #connected').text(group.connected);
 		$('#summary #'+group.roomNM+' #status').html(statusHtml);
 		$('#summary #'+group.roomNM+' #maxoffset').text(group.maxOffset);		
+		
+		if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
+			$('.socket[groupNM=' + group.roomNM + ']').show();
+		}
 	}) 
 }
 
@@ -199,7 +206,7 @@ function chgHeader(data){
 	var connected = _.reduce(data, function(result,value,key,collection){
 		return result + value.connected	
 	},0);
-	$('#connected').text(connected);     
+	$('#connected').text(connected);      
 	// change last update time 
 	var date = new Date();
 	$('#lastUpdated').text(date);
