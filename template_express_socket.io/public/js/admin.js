@@ -92,9 +92,9 @@ function addDetail(data){
 		//console.log('append : ' + socket.socketID);
 		var ipPlusAlias = socket.remoteAddr + ' : ' + socket.alias;
 		var sockData = '<div id=' + socket.socketID + ' class = "row socket" groupNM =' + socket.roomNM + '>';
-		sockData    +=   '<div id=roomNM class="three columns">' + socket.roomNM + '</div>';
+		sockData    +=   '<div id=roomNM class="two columns">' + socket.roomNM + '</div>';
 		//sockData    +=   '<div id=addr class="two columns">' + socket.remoteAddr + '</div>';
-		sockData    +=   '<div id=addr class="two columns">' + ipPlusAlias + '</div>';
+		sockData    +=   '<div id=addr class="three columns">' + ipPlusAlias + '</div>';
 		sockData    +=   '<div id=ctime class="two columns">' + socket.clientTime + '</div>';		
 		sockData    +=   '<div id=stime class="two columns">' + socket.serverTime + '</div>';		
 		sockData    +=   '<div id=offset class="two columns">' + socket.tMonOffset + '</div>';	
