@@ -40,7 +40,7 @@ $(document).ready(function(){
     	$('#last').append('<div> Group : <span id=group class="editable" contenteditable="true" >' + configObj.groupNM +'</span></div>');
     	
     	
-    	var {remote} = require('electron');
+    	var remote = require('electron').remote;
     	remote.getCurrentWindow().on('did-finsh-load',function(){
     		console.log('loaded');
     		configObj.url = $('#server').text();
@@ -49,11 +49,6 @@ $(document).ready(function(){
     	})
     	
     	
-    	var {ipcRenderer} = require('electron')
-    	
-    	ipcRenderer.on('asynchronous-reply', (event, arg) => {
-  			console.log(arg) // prints "pong"
-		})
     	$('#server').blur(function(){
     		console.log($(this).text());
     		configObj.url = $(this).text();
