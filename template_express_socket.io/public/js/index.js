@@ -2,47 +2,78 @@
 
 $(document).ready(function(){
 	
-    console.log('ready');
-
+    // electron에서 구동시키는 경우를 대비해서
+	// index.html에서 미리 require를 window.nodeRequire로 바꿔놓았었다.
+	
     if(window.nodeRequire){
-    	// Electron Client
-    	console.log('electron env');
-    	// retrun previously changed "require"
+    	// Electron Client에 필요한 코딩을 아래에 기술한다.
+    	console.log('Electron Env');
+    	// restore "require"
 	    var require = window.nodeRequire;
-	    // use node.js API
+	    // using node.js API
     	var fs = require('fs');
     	var path = require('path');
     	var url = require('url');
-    	// process current execution directory
-    	// console.log(process.cwd());	
     	
-    	// read local config file using require
-    	var configFile = path.resolve(path.join(process.cwd(), 'config.json'));
-    	var config = require(configFile);
-    	$('#status').append('<div> Server : ' + config.url + '</div>');
-    	$('#status').append('<div> Group : ' + config.groupNM + '</div>');
+    	// process current execution directory
+    	var cwd = process.cwd(); // when used electron .
+    	var resourcesPath = process.resourcesPath ; // when used in exe
+    	var cwdCfgFile = path.resolve(path.join(cwd), 'config.json');
+    	var resourcesCfgFile = path.resolve(path.join(resourcesPath), 'app.asar', 'config.json');
 
+    	var configFile;
+    	
+    	if(fs.existsSync(cwdCfgFile)){
+    		configFile = cwdCfgFile;
+    	}else if(fs.existsSync(resourcesCfgFile)){
+    		configFile = resourcesCfgFile;
+    	}else{
+    			console.log('file not found');
+    	}
+    		  	
     	// read local config file using node fs module
-    	var configObj = JSON.parse(fs.readFileSync(process.cwd() + '/config.json'));
-     	$('h1').append('<div>' + configObj.name + '</div>');  
+		
+    	var configObj = JSON.parse(fs.readFileSync(configFile));
+    	console.log(configObj);
+
+    	$('#last').append('<div> Server : <span id=server class="editable" contenteditable="true" >' + configObj.url +'</span></div>');
+    	$('#last').append('<div> Group : <span id=group class="editable" contenteditable="true" >' + configObj.groupNM +'</span></div>');
+    	
+    	
+    	var {remote} = require('electron');
+    	remote.getCurrentWindow().on('did-finsh-load',function(){
+    		console.log('loaded');
+    		configObj.url = $('#server').text();
+    		configObj.group = $('#group').text();
+    		console.log(configObj);
+    	})
+    	
+    	
+    	var {ipcRenderer} = require('electron')
+    	
+    	ipcRenderer.on('asynchronous-reply', (event, arg) => {
+  			console.log(arg) // prints "pong"
+		})
+    	$('#server').blur(function(){
+    		console.log($(this).text());
+    		configObj.url = $(this).text();
+    		ipcRenderer.send('asynchronous-message', 'ping')
+    		//need check connectivity
+    		fs.writeFileSync(configFile,JSON.stringify(configObj));
+    		remote.getCurrentWindow().loadURL(configObj.url + configObj.groupNM);
+    	});
+    	$('#group').blur(function(){
+    		console.log($(this).text());
+    		configObj.groupNM = $(this).text();
+    		fs.writeFileSync(configFile,JSON.stringify(configObj));
+    		remote.getCurrentWindow().loadURL(configObj.url + configObj.groupNM);
+    	});
+    	
     }else{
     	// Browser Client
     	console.log('browser env');
     }
 
-	/*
-	if(env === 'electron'){
-		// electron client
-		//config = remote.require('./config.json');
-		//console.log(config.url);
-		//console.log(config.groupNM);
-		console.log('electron client');
-	}else{
-		// web browser client
-		console.log('this is browser client ( not electron )');
-	}
-	*/
-	
 	var socket = io();
 	handleConnect(socket);
 	haneleTime(socket);

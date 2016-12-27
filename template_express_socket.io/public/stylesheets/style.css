@@ -34,3 +34,9 @@ a {
 .disabled {
 	color : aliceblue 	
 }
+
+.config {
+	font-size : smaller;
+	opacity : 0.5
+}
+}
