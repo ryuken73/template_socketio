@@ -5,7 +5,7 @@ $(document).ready(function(){
     // electron에서 구동시키는 경우를 대비해서
 	// index.html에서 미리 require를 window.nodeRequire로 바꿔놓았었다.
 	
-    if(window.nodeRequire){
+    if(typeof(window.nodeRequire) !== 'undefined'){
     	// Electron Client에 필요한 코딩을 아래에 기술한다.
     	console.log('Electron Env');
     	// restore "require"
