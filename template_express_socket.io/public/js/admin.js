@@ -151,7 +151,7 @@ function addData(data){
 	
 	newData.forEach(function(group){
 		
-		var diff = getTimeDiff(group.oldestClientTM, Date.now());
+		var diff = getTimeDiff(group.oldestServerTM, Date.now());
 		
 		//console.log('append : ' + group.roomNM);
 		var statusHtml = mkSatusHtml(group.status);
@@ -197,7 +197,7 @@ function updateData(data){
 	})
 	updateData.forEach(function(group){
 		//console.log('update : ' + group.roomNM);
-		var diff = getTimeDiff(group.oldestClientTM, Date.now());
+		var diff = getTimeDiff(group.oldestServerTM, Date.now());
 		
 		var statusHtml = mkSatusHtml(group.status);
 		$('#summary #'+group.roomNM+' #connected').text(group.connected);
