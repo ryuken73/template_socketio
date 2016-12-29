@@ -66,6 +66,7 @@ function updateDetail(data){
 		return _.some($('.socket'),['id', socketID]);
 	})
 	updateData.forEach(function(socket){
+		var diff = getTimeDiff(socket.clientTime, Date.now());	
 		//console.log('update : ' + socket.socketID);
 		var escapedID = socket.socketID.replace( /(:|\.|\/|\#|\-|\[|_|\]|,|=)/g, "\\$1" );
 		//console.log('escaped : ' + escapedID);
@@ -77,6 +78,7 @@ function updateDetail(data){
 		$('#detail #'+escapedID+' #stime').text(socket.serverTime);
 		$('#detail #'+escapedID+' #offset').text(socket.tMonOffset);
 		$('#detail #'+escapedID+' #status').text(socket.tMonStatus);		
+		$('#detail #'+escapedID+' #last').text(diff);	
 	}) 		
 }
 
@@ -89,6 +91,7 @@ function addDetail(data){
 	});
 	//console.log(newData);
 	newData.forEach(function(socket){
+		var diff = getTimeDiff(socket.clientTime, Date.now());		
 		//console.log('append : ' + socket.socketID);
 		var ipPlusAlias = socket.remoteAddr + ' : ' + socket.alias;
 		var sockData = '<div id=' + socket.socketID + ' class = "row socket" groupNM =' + socket.roomNM + '>';
@@ -97,8 +100,9 @@ function addDetail(data){
 		sockData    +=   '<div id=addr class="three columns">' + ipPlusAlias + '</div>';
 		sockData    +=   '<div id=ctime class="two columns">' + socket.clientTime + '</div>';		
 		sockData    +=   '<div id=stime class="two columns">' + socket.serverTime + '</div>';		
-		sockData    +=   '<div id=offset class="two columns">' + socket.tMonOffset + '</div>';	
+		sockData    +=   '<div id=offset class="one columns">' + socket.tMonOffset + '</div>';	
 		sockData    +=   '<div id=status class="one columns">' + socket.tMonStatus + '</div>';				
+		sockData    +=   '<div id=last class="one columns">' + diff + '</div>';		
 		sockData     += '</div>  ';
 		$('#detail').append(sockData);
 		$('#'+socket.socketID+'.socket').hide();
@@ -146,6 +150,9 @@ function addData(data){
 	});
 	
 	newData.forEach(function(group){
+		
+		var diff = getTimeDiff(group.oldestClientTM, Date.now());
+		
 		//console.log('append : ' + group.roomNM);
 		var statusHtml = mkSatusHtml(group.status);
 		var rowData = '<div id=' + group.roomNM + ' class = "row group">'
@@ -153,7 +160,8 @@ function addData(data){
 		//rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
 		rowData     += '  <div id=connected class = "three columns">' + group.connected + '</div>'	
 		rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'
-		rowData     += '  <div id=maxoffset class = "three columns">' + group.maxOffset + '</div>'
+		rowData     += '  <div id=maxoffset class = "two columns">' + group.maxOffset + '</div>'
+		rowData     += '  <div id=oldestClient class = "two columns">' + diff + '</div>'		
 		rowData     += '</div>  ';
 		$('#summary').append(rowData);
 		if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
@@ -189,10 +197,13 @@ function updateData(data){
 	})
 	updateData.forEach(function(group){
 		//console.log('update : ' + group.roomNM);
+		var diff = getTimeDiff(group.oldestClientTM, Date.now());
+		
 		var statusHtml = mkSatusHtml(group.status);
 		$('#summary #'+group.roomNM+' #connected').text(group.connected);
 		$('#summary #'+group.roomNM+' #status').html(statusHtml);
 		$('#summary #'+group.roomNM+' #maxoffset').text(group.maxOffset);		
+		$('#summary #'+group.roomNM+' #oldestClient').text(diff);		
 		
 		if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
 			$('.socket[groupNM=' + group.roomNM + ']').show();
@@ -209,6 +220,9 @@ function chgHeader(data){
 	$('#connected').text(connected);      
 	// change last update time 
 	var date = new Date();
-	$('#lastUpdated').text(date);
-	
+	$('#lastUpdated').text(date);	
+}
+
+function getTimeDiff(time1, time2){
+	return time2 - time1;
 }

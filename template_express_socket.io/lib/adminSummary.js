@@ -130,11 +130,14 @@ function mkSummary(obj){
 							var statusObj = _.countBy(statusList, function(status){return status;});
 							var offsetList = _.map(value,'tMonOffset');
 							var maxOffset = _.max(offsetList);
+							var clientTimeList = _.map(value,'clientTime');
+							var oldestClientTM = _.min(clientTimeList);
 							
 							result['roomNM'] = roomNM; 
 							result['connected'] = size;
 							result['status'] = statusObj; 
 							result['maxOffset'] = maxOffset;
+							result['oldestClientTM'] = oldestClientTM;
 							return result
 						})
 						
