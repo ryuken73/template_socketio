@@ -168,6 +168,18 @@ function addData(data){
 			$('.socket[groupNM=' + group.roomNM + ']').show();
 		}
 		$('input[roomNM=' + group.roomNM + ']').change(function(){
+			
+			var someChecked = _.some($('input'), function(e){
+				console.log(e.checked);
+				return e.checked
+			});
+			
+			if(someChecked){
+				$('#detailHeader').show();
+			}else{
+				$('#detailHeader').hide();
+			}
+			
 			//console.log($(this).is(":checked"));
 			if($(this).is(":checked")){
 				$('.socket[groupNM=' + group.roomNM + ']').show();
