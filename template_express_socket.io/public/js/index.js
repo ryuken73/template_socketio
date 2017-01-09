@@ -6,11 +6,14 @@ $(document).ready(function(){
 	// index.html에서 미리 require를 window.nodeRequire로 바꿔놓았었다.
 	
     if(typeof(window.nodeRequire) !== 'undefined'){
+    	
     	// Electron Client에 필요한 코딩을 아래에 기술한다.
     	console.log('Electron Env');
-    	// restore "require"
+    	
+    	// Restore "require"
 	    var require = window.nodeRequire;
-	    // using node.js API
+	    
+	    // Use node.js API
     	var fs = require('fs');
     	var path = require('path');
     	var url = require('url');
@@ -31,7 +34,7 @@ $(document).ready(function(){
     			console.log('file not found');
     	}
     		  	
-    	// read local config file using node fs module
+    	// Read local config file using node fs module
 		
     	var configObj = JSON.parse(fs.readFileSync(configFile));
     	console.log(configObj);
@@ -53,7 +56,7 @@ $(document).ready(function(){
     		console.log($(this).text());
     		configObj.url = $(this).text();
     		ipcRenderer.send('asynchronous-message', 'ping')
-    		//need check connectivity
+    		//TODO : need check connectivity
     		fs.writeFileSync(configFile,JSON.stringify(configObj));
     		remote.getCurrentWindow().loadURL(configObj.url + configObj.groupNM);
     	});
