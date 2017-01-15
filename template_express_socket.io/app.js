@@ -9,6 +9,9 @@ var routes = require('./routes/indexes');
 var users = require('./routes/users');
 var admin = require('./routes/admins');
 
+var levelup = require('levelup');
+global.db = levelup('./timeMon.db')
+
 var app = express();
 var env = app.get('env');
  
