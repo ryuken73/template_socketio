@@ -199,11 +199,11 @@ function mkSatusHtml(status){
 	var warn = '<span class="warn">Warn:' + numWarn + ' </span>';
 	var fail = '<span class="fail">Fail:' + numFail + ' </span>';
 	return good + ' / ' + warn + ' / ' + fail;
-}
+} 
 
 function updateData(data){
 	// update some rows which is in newly arrived data
-	var updateData = _.filter(data, function(group){
+	var updateData = _.filter(data, function(group){ 
 		var roomNM = group.roomNM;
 		return _.some($('.group'),['id', roomNM]);
 	})
