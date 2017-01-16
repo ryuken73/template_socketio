@@ -23,7 +23,7 @@ router.get('/getHighCnt/:groupNM',function(req,res,next){
 	global.db.get(k, function(err,count){
 		if(err){
 			global.logger.error(err);
-			res.send({'result':0});
+			res.send({'result':null});
 		}else{
 			res.send({'result':count});
 		}

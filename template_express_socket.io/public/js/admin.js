@@ -151,43 +151,86 @@ function addData(data){
 	
 	newData.forEach(function(group){
 		
-		var diff = getTimeDiff(group.oldestServerTM, Date.now());
+		getHighCnt(group)
+		.then(function(ret){		
+					console.log(ret);
+					var count;
+					if(ret.result === null){
+						count = group.connected;
+						putHighCnt(group);
+					} else {
+						count = ret.result;
+					}	
+					
+					var diff = getTimeDiff(group.oldestServerTM, Date.now());
 		
-		//console.log('append : ' + group.roomNM);
-		var statusHtml = mkSatusHtml(group.status);
-		var rowData = '<div id=' + group.roomNM + ' class = "row group">'
-		rowData     += '  <div id=groupNM class="two columns"><input type="checkbox" roomNM=' + group.roomNM + '> ' + group.roomNM + '</input></div>'	
-		//rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
-		rowData     += '  <div id=connected class = "three columns">' + group.connected + '</div>'	
-		rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'
-		rowData     += '  <div id=maxoffset class = "two columns">' + group.maxOffset + '</div>'
-		rowData     += '  <div id=oldestClient class = "two columns">' + diff + '</div>'		
-		rowData     += '</div>  ';
-		$('#summary').append(rowData);
-		if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
-			$('.socket[groupNM=' + group.roomNM + ']').show();
-		}
-		$('input[roomNM=' + group.roomNM + ']').change(function(){
+					//console.log('append : ' + group.roomNM);
+					var statusHtml = mkSatusHtml(group.status);
+					var rowData = '<div id=' + group.roomNM + ' class = "row group">'
+					rowData     += '  <div id=groupNM class="two columns"><input type="checkbox" roomNM=' + group.roomNM + '> ' + group.roomNM + '</input></div>'	
+					//rowData     += '  <div id=groupNM class="three columns"><button class="button">' + group.roomNM + '</button></div>'
+					rowData     += '  <div id=connected class = "three columns">' + group.connected + ' / ' + count + '</div>'	
+					rowData     += '  <div id=status class = "three columns">' + statusHtml + '</div>'
+					rowData     += '  <div id=maxoffset class = "two columns">' + group.maxOffset + '</div>'
+					rowData     += '  <div id=oldestClient class = "two columns">' + diff + '</div>'		 
+					rowData     += '</div>  '; 
+					$('#summary').append(rowData);
+					if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
+						$('.socket[groupNM=' + group.roomNM + ']').show(); 
+					}
+					$('input[roomNM=' + group.roomNM + ']').change(function(){
+						
+						var someChecked = _.some($('input'), function(e){ 
+							console.log(e.checked);
+							return e.checked
+						});
+						  
+						if(someChecked){
+							$('#detailHeader').show();
+						}else{
+							$('#detailHeader').hide();
+						}
+						
+						//console.log($(this).is(":checked"));
+						if($(this).is(":checked")){
+							$('.socket[groupNM=' + group.roomNM + ']').show();
+						}else{
+							$('.socket[groupNM=' + group.roomNM + ']').hide();				
+						}
+					})
 			
-			var someChecked = _.some($('input'), function(e){
-				console.log(e.checked);
-				return e.checked
-			});
-			
-			if(someChecked){
-				$('#detailHeader').show();
-			}else{
-				$('#detailHeader').hide();
-			}
-			
-			//console.log($(this).is(":checked"));
-			if($(this).is(":checked")){
-				$('.socket[groupNM=' + group.roomNM + ']').show();
-			}else{
-				$('.socket[groupNM=' + group.roomNM + ']').hide();				
-			}
 		})
 	});	
+}
+
+function getHighCnt(group){
+	var def = $.Deferred();
+	$.ajax({
+			url : '/admin/getHighCnt/' + group.roomNM,
+			method : 'GET',
+			type : 'application/json',
+			success : function(ret){
+				def.resolve(ret);
+			}
+	});
+	return def.promise();
+}
+
+function putHighCnt(group){
+	var def = $.Deferred();
+	
+	$.ajax({
+		url : '/admin/putHighCnt/' + group.roomNM,
+		method : 'POST',
+		type : 'application/json',
+		data : {'count':group.connected},
+		success : function(ret){				
+			def.resolve(ret);
+		}
+	})
+	
+	return def.promise();
+	
 }
 
 function mkSatusHtml(status){
@@ -208,18 +251,34 @@ function updateData(data){
 		return _.some($('.group'),['id', roomNM]);
 	})
 	updateData.forEach(function(group){
+			
 		//console.log('update : ' + group.roomNM);
-		var diff = getTimeDiff(group.oldestServerTM, Date.now());
 		
-		var statusHtml = mkSatusHtml(group.status);
-		$('#summary #'+group.roomNM+' #connected').text(group.connected);
-		$('#summary #'+group.roomNM+' #status').html(statusHtml);
-		$('#summary #'+group.roomNM+' #maxoffset').text(group.maxOffset);		
-		$('#summary #'+group.roomNM+' #oldestClient').text(diff);		
+		getHighCnt(group)
+		.then(function(ret){
+					var count;
+					if((ret.result === null) || (ret.result < group.connected)){
+						count = group.connected;
+						putHighCnt(group);
+					} else {
+						count = ret.result;
+					}
+					
+					var diff = getTimeDiff(group.oldestServerTM, Date.now());
+					
+					var statusHtml = mkSatusHtml(group.status);
+					$('#summary #'+group.roomNM+' #connected').text(group.connected + ' / ' + count);
+					$('#summary #'+group.roomNM+' #status').html(statusHtml);
+					$('#summary #'+group.roomNM+' #maxoffset').text(group.maxOffset);		
+					$('#summary #'+group.roomNM+' #oldestClient').text(diff);		
+					
+					if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
+						$('.socket[groupNM=' + group.roomNM + ']').show();
+					}					
+					
+		})
 		
-		if($('input[roomNM=' + group.roomNM + ']').is(":checked")){
-			$('.socket[groupNM=' + group.roomNM + ']').show();
-		}
+
 	}) 
 }
 
