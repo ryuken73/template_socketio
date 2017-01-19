@@ -198,6 +198,11 @@ function addData(data){
 							$('.socket[groupNM=' + group.roomNM + ']').hide();				
 						}
 					})
+					
+					// add click event on connected to reset data
+					$('#' + group.roomNM + ' #connected').click(function(){
+						$(this).text('0 / 0');
+					})
 			
 		})
 	});	
