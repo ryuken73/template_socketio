@@ -201,7 +201,8 @@ function addData(data){
 					
 					// add click event on connected to reset data
 					$('#' + group.roomNM + ' #connected').click(function(){
-						$(this).text('0 / 0');
+						$(this).text('0 / 0');						
+						putHighCnt({roomNM : group.roomNM, connected : 0});
 					})
 			
 		})
