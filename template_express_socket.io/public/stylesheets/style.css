@@ -12,17 +12,17 @@ a {
 .good {	
 	color : cyan;
 	display : inline-block;
-	width : 55px;
+	width : 57px;
 }
 .warn {
 	color : bisque;	
 	display : inline-block;
-	width : 55px;
+	width : 57px;
 }
 .fail {	
 	color : coral;
 	display : inline-block;
-	width : 55px;
+	width : 57px;
 }
 
 .disconnected {
