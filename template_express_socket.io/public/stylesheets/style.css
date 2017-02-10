@@ -1,6 +1,8 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color : darkslategray;
+  color : white !important;
 }
 
 a {
@@ -8,15 +10,15 @@ a {
 }
 
 .good {	
-	color : blueviolet;
+	color : cyan;
 }
 .warn {
-	color : darkgray;	
+	color : bisque;	
 	
 }
 .fail {
 	
-	color : red;
+	color : coral;
 }
 
 .disconnected {
@@ -24,11 +26,11 @@ a {
 }
 
 .connected {
-	color : blue
+	color : yellow;
 }
 
 .enabled {
-	color : black	
+	color : white	
 }
 
 .disabled {

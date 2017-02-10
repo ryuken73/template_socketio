@@ -13,7 +13,7 @@ $(document).ready(function(){
     	// Restore "require"
 	    var require = window.nodeRequire;
 	    
-	    // Use node.js API
+	    // Use node.js API   
     	var fs = require('fs');
     	var path = require('path');
     	var url = require('url');
