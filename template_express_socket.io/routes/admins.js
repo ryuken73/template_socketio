@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-	global.logger.trace('req obj : %j',req);
+	global.logger.trace('req obj : %j',req); 
     res.render('admin');
 });
 
