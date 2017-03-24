@@ -21,7 +21,7 @@ module.exports = function(socket, io){
 		getSocketIDs(clients) // get all socket id array
 		.then(addStatus) 
 		.then(function(result){
-			global.logger.info(result);
+			//global.logger.trace(result);
 			io.emit('server-to-client resAllStatus',result);
 		})
 		.then(null, function(err){
