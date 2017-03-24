@@ -14,6 +14,22 @@ function handleConnect(socket){
 		//$('.row').attr('class','row enabled');
 		$('#connection_status').attr('class','connected');
 	})
+    /*
+	
+	socket.on('setID',function(data){
+		console.log(data);
+		var socketID = data.socketID;
+		var room = 'admin';
+	
+		console.log('joinRoom : ' + room + ' : ' + socketID);
+		socket.emit('joinRoom',{ roomNM : room });
+		socket.on('joinResult',function(data){
+			console.log('node joined : ' + data.ip);
+			//TODO :  refresh same room member list : IP address
+		});   		
+	})
+	*/	
+	
 	handleDisconnect(socket);	
     handleSummaryRefesh(socket);
     handleDetailRefresh(socket);
@@ -29,13 +45,16 @@ function handleDisconnect(socket){
 }
 
 function handleDetailRefresh(socket){
+	
+	/*
 	socket.on('adminDetail-server-to-client init',function(data){
 		//console.log('send req to server');
 		socket.emit('client-to-server reqAllStatus');
 	});
+	0314 */ 
 	
 	socket.on('server-to-client resAllStatus', function(data){	
-		//console.log('got res from server');
+		console.log('got res from server');
 		removeDetail(data);
 		updateDetail(data);
 		addDetail(data);

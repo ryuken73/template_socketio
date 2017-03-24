@@ -66,7 +66,7 @@ $(document).ready(function(){
     		fs.writeFileSync(configFile,JSON.stringify(configObj));
     		remote.getCurrentWindow().loadURL(configObj.url + configObj.groupNM);
     	});
-    	
+    	// End electron Client
     }else{
     	// Browser Client
     	console.log('browser env');
@@ -74,7 +74,7 @@ $(document).ready(function(){
 
 	var socket = io();
 	handleConnect(socket);
-	haneleTime(socket);
+	handleTime(socket);
 })
 
 	
@@ -126,7 +126,7 @@ function handleRoom(socket){
 	});   
 }
 
-function haneleTime(socket){
+function handleTime(socket){
 	
 	socket.on('request client time',function(){
 		console.log('receive request client time');

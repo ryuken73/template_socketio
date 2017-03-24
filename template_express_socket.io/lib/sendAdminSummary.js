@@ -4,10 +4,6 @@ var dateUtil = require('../lib/dateToString');
 
 module.exports = function(socket, io){
 	
-	//make admin client to send request
-	socket.emit('adminSummary-server-to-client init')
-
-	socket.on('client-to-server reqSummary',function(data){
 		
 		// get client info objects
 		// looks like below
@@ -32,19 +28,12 @@ module.exports = function(socket, io){
 		.then(mkSummary) // make summary [{roomNM:room name, connected: number of client, status:{good:0,warn:1,fail:0},{roomNM:..]
 		.then(function(result){
 			global.logger.trace(result);
-			socket.emit('server-to-client resSummary',result);
+			io.emit('server-to-client resSummary',result);
 		})
 		.then(null, function(err){
 			global.logger.error(err);
 		});
-	});
-	
-	socket.on('client-to-server resSummaryDone',function(data){
-		setTimeout(function(){
-			socket.emit('adminSummary-server-to-client init');
-		},1000);		
-	});	
-	
+
 }
 
 function getRooms(clients){

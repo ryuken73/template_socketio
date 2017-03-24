@@ -1,10 +1,13 @@
 var _ = require('lodash');
 var Q = require('q');
+var sendAdminDetail = require('../lib/sendAdminDetail');
+var sendAdminSummary = require('../lib/sendAdminSummary');
 
 module.exports = function(socket, io){
 	welcome(socket);
 	joinRoom(socket, io);
 	handleTime(socket, io);
+	handleDisconnect(socket, io);
 }
 
 function welcome(socket){
@@ -16,7 +19,7 @@ function welcome(socket){
 	
 	var remoteAddr = socket.request.connection.remoteAddress.replace('::ffff:','');
 	global.logger.info('client connected : %s', remoteAddr);
-	socket.remoteAddr = remoteAddr;
+	socket.remoteAddr = remoteAddr; 
 	 
     //stateless server를 위해서...    
 	//socketid를 client로 내려준다. 서버에서 관리하는 socketid는 없다.
@@ -34,9 +37,18 @@ function joinRoom(socket, io){
 	});
 }
 
+function	handleDisconnect(socket, io){
+	socket.on('disconnect',function(){
+		sendAdminSummary(socket, io); //0314
+		sendAdminDetail(socket, io); //0314
+	});
+}
+
 function handleTime(socket, io){
 	
-	socket.emit('request client time');
+	if(socket.roomNM !== 'admin'){
+		socket.emit('request client time');
+	}	
 	
 	socket.on('response client time',function(data){
 		global.logger.trace('response client time : %s : %s : %s : %s', socket.remoteAddr, data.clientTime, data.socketID, data.alias );
@@ -58,13 +70,15 @@ function handleTime(socket, io){
 			socketInIO.clientTime = clientTime;
 			socketInIO.serverTime = serverTime;
 			socketInIO.alias = data.alias;
+			sendAdminSummary(socket, io); //0314
+			sendAdminDetail(socket, io); //0314
 		})
 	});
 	
 	socket.on('receive server time',function(data){
 		setTimeout(function(){
 			socket.emit('request client time');
-		},1000)
+		},5000)
 	})	
 }
 
