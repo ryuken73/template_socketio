@@ -54,7 +54,7 @@ function handleDetailRefresh(socket){
 	0314 */ 
 	
 	socket.on('server-to-client resAllStatus', function(data){	
-		console.log('got res from server');
+		//console.log('got res from server');
 		removeDetail(data);
 		updateDetail(data);
 		addDetail(data);
