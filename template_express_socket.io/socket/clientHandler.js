@@ -78,7 +78,7 @@ function handleTime(socket, io){
 	socket.on('receive server time',function(data){
 		setTimeout(function(){
 			socket.emit('request client time');
-		},5000)
+		},1000)
 	})	
 }
 
