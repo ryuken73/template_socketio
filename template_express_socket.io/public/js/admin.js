@@ -13,6 +13,7 @@ function handleConnect(socket){
 		$('#connection_status').text('connected');
 		//$('.row').attr('class','row enabled');
 		$('#connection_status').attr('class','connected');
+		socket.emit('admin client connected');
 	})
     /*
 	

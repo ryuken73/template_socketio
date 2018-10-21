@@ -8,6 +8,7 @@ module.exports = function(socket, io){
 	joinRoom(socket, io);
 	handleTime(socket, io);
 	handleDisconnect(socket, io);
+	handleAdminClient(socket, io);
 }
 
 function welcome(socket){
@@ -70,8 +71,8 @@ function handleTime(socket, io){
 			socketInIO.clientTime = clientTime;
 			socketInIO.serverTime = serverTime;
 			socketInIO.alias = data.alias;
-			sendAdminSummary(socket, io); //0314
-			sendAdminDetail(socket, io); //0314
+			//sendAdminSummary(socket, io); //0314
+			//sendAdminDetail(socket, io); //0314
 		})
 	});
 	
@@ -80,6 +81,18 @@ function handleTime(socket, io){
 			socket.emit('request client time');
 		},1000)
 	})	
+}
+
+function handleAdminClient(socket,io){
+	global.logger.trace('socke room Name : %s', socket.roomNM);
+	socket.on('admin client connected', function(data){
+		setInterval(function(){
+			global.logger.trace('admin client send');
+			sendAdminSummary(socket, io);
+			sendAdminDetail(socket, io);
+		},1000);
+
+	})
 }
 
 function getStatus(diff, clientTime){
