@@ -38,7 +38,7 @@ function joinRoom(socket, io){
 	});
 }
 
-function	handleDisconnect(socket, io){
+function handleDisconnect(socket, io){
 	socket.on('disconnect',function(){
 		sendAdminSummary(socket, io); //0314
 		sendAdminDetail(socket, io); //0314
@@ -86,12 +86,13 @@ function handleTime(socket, io){
 function handleAdminClient(socket,io){
 	global.logger.trace('socke room Name : %s', socket.roomNM);
 	socket.on('admin client connected', function(data){
-		setInterval(function(){
-			global.logger.trace('admin client send');
-			sendAdminSummary(socket, io);
-			sendAdminDetail(socket, io);
-		},1000);
-
+		if(!global.adminSender){ 
+			global.adminSender = setInterval(function(){
+				global.logger.trace('admin client send');
+				sendAdminSummary(socket, io);
+				sendAdminDetail(socket, io);
+			},1000);
+		}
 	})
 }
 
